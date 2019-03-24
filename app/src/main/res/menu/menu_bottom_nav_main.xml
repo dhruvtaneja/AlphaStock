@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+            android:id="@+id/action_get_quote"
+            android:enabled="true"
+            android:icon="@drawable/ic_quote"
+            android:title="@string/get_quote"/>
+
+    <item
+            android:id="@+id/action_compare"
+            android:enabled="true"
+            android:icon="@drawable/ic_compare"
+            android:title="@string/compare"/>
+</menu>

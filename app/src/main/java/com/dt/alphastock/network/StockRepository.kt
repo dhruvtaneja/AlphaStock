@@ -14,10 +14,6 @@ class StockRepository(private val stockApi: StockApi) {
         return stockApi.getQuote(symbol = symbol)
     }
 
-    private suspend fun getQuote(symbol: String): GlobalQuote {
-        return stockApi.getQuote(symbol).await()
-    }
-
     suspend fun getQuoteStream(symbol: String, coroutineScope: CoroutineScope): ReceiveChannel<GlobalQuote?> {
         return coroutineScope.produce {
             while (isActive) {

@@ -7,12 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.fragment.app.Fragment
+import com.dt.alphastock.network.GlobalQuote
 import com.dt.alphastock.network.StockApi
 import com.dt.alphastock.network.StockRepository
 import kotlinx.android.synthetic.main.fragment_quote.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.consumeEach
 import okhttp3.OkHttpClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import kotlin.coroutines.CoroutineContext
@@ -54,47 +57,47 @@ class QuoteFragment : Fragment(), CoroutineScope {
         stockRepository = StockRepository(stockApi)
 
         button_get_quote.setOnClickListener {
-            //  the async way, using callbacks
-//            launch {
-//                val quote = stockApi.getQuote(symbol).await()
-//
-//                text_view_quote.text = quote.quote?.price?.roundTo(2)
-//            }
 
-            //  the sync way
-            launch {
-                val quote = async(Dispatchers.IO) { stockApi.getQuote(edit_text_symbol.text.toString()).execute() }
+            /*
+            TODO
+            1. Launch a coroutine with main context
+            2. Switch context to I/O dispatcher
+            3. Get the quote using retrofit call
+            4. Set the price to the text view
+             */
 
-                text_view_quote.text = quote.await().body()?.quote?.price
-            }
+            /*
+            TODO
+            1. Launch a coroutine with main context
+            2. Get quote using async builder
+            3. Set price on the text view
+             */
 
-            //  the sync way, without async-await
-//            launch {
-//                val quote = withContext(Dispatchers.IO) {
-//                    stockApi.getQuote(edit_text_symbol.text.toString()).execute()
-//                }
-//
-//                text_view_quote.text = quote.body()?.quote?.price
-//            }
+            stockApi.getQuote(edit_text_symbol.text.toString()).enqueue(object : Callback<GlobalQuote> {
+                override fun onFailure(call: Call<GlobalQuote>, t: Throwable) {
+                    //  show some error
+                }
+
+                override fun onResponse(call: Call<GlobalQuote>, response: Response<GlobalQuote>) {
+                    text_view_quote.text = response.body()?.quote?.price
+                }
+            })
+
+            /*
+            TODO
+            1. Get the quote using a suspendCancellableCoroutine
+            2. Set price on the text view
+             */
+
         }
 
         button_start_stream.setOnClickListener {
-            launch {
-                val symbol = edit_text_symbol.text.toString()
-                var previous = text_view_quote.text.toString().toFloatOrNull() ?: 0F
-                stockRepository.getQuoteStream(symbol, this).consumeEach { globalQuote ->
-                    globalQuote?.quote?.let {
-                        val price = globalQuote.quote.price.roundTo(2)
-                        if (price.toFloat() > previous) {
-                            animateIncrease()
-                        } else {
-                            animateDecrease()
-                        }
-                        previous = price.toFloat()
-                        text_view_quote.text = price
-                    }
-                }
-            }
+            /*
+            TODO
+            1. Start a coroutine
+            2. Get stock price stream
+            3. Update the price on the text view
+             */
         }
     }
 

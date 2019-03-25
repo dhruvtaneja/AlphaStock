@@ -1,20 +1,20 @@
 package com.dt.alphastock
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.dt.alphastock.network.StockApi
 import kotlinx.android.synthetic.main.fragment_comparison.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import kotlin.coroutines.CoroutineContext
-import kotlin.system.measureTimeMillis
 
 class ComparisonFragment : Fragment(), CoroutineScope {
 
@@ -48,33 +48,18 @@ class ComparisonFragment : Fragment(), CoroutineScope {
         stockApi = retrofit.create(StockApi::class.java)
 
         button_compare.setOnClickListener {
-            val symbol1 = edit_text_symbol_1.text.toString()
-            val symbol2 = edit_text_symbol_2.text.toString()
-
-            launch {
-                val totalTime = measureTimeMillis {
-                    val quotes = getQuotesAsync(symbol1, symbol2).await()
-
-                    text_view_quote_1.text = quotes.first?.quote?.price?.roundTo(1)
-                    text_view_quote_2.text = quotes.second?.quote?.price?.roundTo(1)
-                }
-
-                Log.d(TIME_QUOTE, "total time = $totalTime")
-            }
+            /*
+            TODO
+            1. Get symbols from the edit texts
+            2. Get quotes in parallel using async await
+            3. Round the prices to 1 decimal point
+            4. Set prices to the text views
+             */
         }
-    }
-
-    private fun getQuotesAsync(symbol1: String, symbol2: String) = async {
-        val quote1 = async(Dispatchers.IO) { stockApi.getQuote(symbol1).execute() }
-        val quote2 = async(Dispatchers.IO) { stockApi.getQuote(symbol2).execute() }
-
-        quote1.await().body() to quote2.await().body()
     }
 
     companion object {
         @JvmStatic
         fun newInstance() = ComparisonFragment()
-
-        private const val TIME_QUOTE = "TIME_QUOTE"
     }
 }

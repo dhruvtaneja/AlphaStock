@@ -11,22 +11,15 @@ import com.dt.alphastock.network.GlobalQuote
 import com.dt.alphastock.network.StockApi
 import com.dt.alphastock.network.StockRepository
 import kotlinx.android.synthetic.main.fragment_quote.*
-import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import kotlin.coroutines.CoroutineContext
 
 
-class QuoteFragment : Fragment(), CoroutineScope {
-
-    private var job = Job()
-
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
+class QuoteFragment : Fragment() {
 
     private lateinit var httpClient: OkHttpClient
 
@@ -99,11 +92,6 @@ class QuoteFragment : Fragment(), CoroutineScope {
             3. Update the price on the text view
              */
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        job.cancel()
     }
 
     companion object {
